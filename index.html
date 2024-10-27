@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--body-bg);
+            color: var(--body-color);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: var(--header-bg);
+            color: var(--header-color);
+        }
+        .game-list {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+        .game-item {
+            margin: 10px;
+            cursor: pointer;
+            text-align: center;
+            background-color: var(--item-bg);
+            color: var(--item-color);
+            border-radius: 10px;
+            padding: 10px;
+        }
+        .game-item img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+        }
+        .popup-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            position: relative;
+        }
+        .popup-content iframe {
+            width: 600px;
+            height: 400px;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+        .settings {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 100%;
+            background: var(--settings-bg);
+            color: var(--settings-color);
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .settings h2 {
+            margin-top: 0;
+        }
+        .settings label {
+            display: block;
+            margin: 10px 0;
+        }
+        .settings input[type="radio"] {
+            margin-right: 10px;
+        }
+        .settings-btn {
+            cursor: pointer;
+        }
+        .settings-close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+        .repo-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+        }
+        .repo-popup-content {
+            background: var(--settings-bg);
+            color: var(--settings-color);
+            padding: 20px;
+            border-radius: 10px;
+            position: relative;
+        }
+        .repo-popup-content input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            background: var(--input-bg);
+            color: var(--input-color);
+            border: 1px solid var(--input-border);
+        }
+        .repo-popup-content button {
+            padding: 10px 20px;
+            cursor: pointer;
+            background: var(--button-bg);
+            color: var(--button-color);
+            border: none;
+            border-radius: 5px;
+        }
+        .repo-close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+        :root {
+            --header-bg: #f8f9fa;
+            --header-color: #000;
+            --body-bg: #fff;
+            --body-color: #000;
+            --item-bg: #f8f9fa;
+            --item-color: #000;
+            --settings-bg: #fff;
+            --settings-color: #000;
+            --input-bg: #fff;
+            --input-color: #000;
+            --input-border: #ccc;
+            --button-bg: #007bff;
+            --button-color: #fff;
+        }
+        body.light {
+            --header-bg: #f8f9fa;
+            --header-color: #000;
+            --body-bg: #fff;
+            --body-color: #000;
+            --item-bg: #f8f9fa;
+            --item-color: #000;
+            --settings-bg: #fff;
+            --settings-color: #000;
+            --input-bg: #fff;
+            --input-color: #000;
+            --input-border: #ccc;
+            --button-bg: #007bff;
+            --button-color: #fff;
+        }
+        body.dark {
+            --header-bg: #343a40;
+            --header-color: #fff;
+            --body-bg: #212529;
+            --body-color: #fff;
+            --item-bg: #343a40;
+            --item-color: #fff;
+            --settings-bg: #343a40;
+            --settings-color: #fff;
+            --input-bg: #495057;
+            --input-color: #fff;
+            --input-border: #6c757d;
+            --button-bg: #007bff;
+            --button-color: #fff;
+        }
+        body.navy {
+            --header-bg: #001f3f;
+            --header-color: #fff;
+            --body-bg: #001f3f;
+            --body-color: #fff;
+            --item-bg: #001f3f;
+            --item-color: #fff;
+            --settings-bg: #001f3f;
+            --settings-color: #fff;
+            --input-bg: #003366;
+            --input-color: #fff;
+            --input-border: #004080;
+            --button-bg: #007bff;
+            --button-color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Game List</h1>
+        <div>
+            <span class="settings-btn" id="settingsBtn">⚙️ Settings</span>
+            <span class="settings-btn" id="repoBtn">🔗 Change Repo</span>
+        </div>
+    </div>
+    <div class="game-list" id="gameList"></div>
+
+    <div class="popup" id="popup">
+        <div class="popup-content">
+            <span class="close-btn" id="closeBtn">&times;</span>
+            <iframe id="gameIframe" src="" frameborder="0"></iframe>
+        </div>
+    </div>
+
+    <div class="settings" id="settings">
+        <span class="settings-close-btn" id="settingsCloseBtn">&times;</span>
+        <h2>Settings</h2>
+        <label>
+            <input type="radio" name="theme" value="light"> Light Theme
+        </label>
+        <label>
+            <input type="radio" name="theme" value="dark"> Dark Theme
+        </label>
+        <label>
+            <input type="radio" name="theme" value="navy"> Navy Theme
+        </label>
+    </div>
+
+    <div class="repo-popup" id="repoPopup">
+        <div class="repo-popup-content">
+            <span class="repo-close-btn" id="repoCloseBtn">&times;</span>
+            <h2>Change GitHub Repo</h2>
+            <input type="text" id="repoUrl" placeholder="Enter GitHub repo URL">
+            <button id="saveRepoBtn">Save</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.body.className = savedTheme;
+            document.querySelector(`input[name="theme"][value="${savedTheme}"]`).checked = true;
+
+            const savedRepo = localStorage.getItem('repoUrl') || 'games.json';
+            loadGames(savedRepo);
+
+            function loadGames(repoUrl) {
+                fetch(repoUrl)
+                    .then(response => response.json())
+                    .then(data => {
+                        const gameList = document.getElementById('gameList');
+                        gameList.innerHTML = '';
+                        data.games.forEach(game => {
+                            const gameItem = document.createElement('div');
+                            gameItem.className = 'game-item';
+                            gameItem.innerHTML = `
+                                <img src="${game.image}" alt="${game.name}">
+                                <p>${game.name}</p>
+                            `;
+                            gameItem.addEventListener('click', () => {
+                                document.getElementById('gameIframe').src = game.url;
+                                document.getElementById('popup').style.display = 'flex';
+                            });
+                            gameList.appendChild(gameItem);
+                        });
+                    });
+            }
+
+            document.getElementById('closeBtn').addEventListener('click', () => {
+                document.getElementById('popup').style.display = 'none';
+                document.getElementById('gameIframe').src = '';
+            });
+
+            document.getElementById('settingsBtn').addEventListener('click', () => {
+                document.getElementById('settings').style.display = 'block';
+            });
+
+            document.getElementById('settingsCloseBtn').addEventListener('click', () => {
+                document.getElementById('settings').style.display = 'none';
+            });
+
+            document.querySelectorAll('input[name="theme"]').forEach(input => {
+                input.addEventListener('change', (event) => {
+                    const theme = event.target.value;
+                    document.body.className = theme;
+                    localStorage.setItem('theme', theme);
+                });
+            });
+
+            document.getElementById('repoBtn').addEventListener('click', () => {
+                document.getElementById('repoPopup').style.display = 'flex';
+            });
+
+            document.getElementById('repoCloseBtn').addEventListener('click', () => {
+                document.getElementById('repoPopup').style.display = 'none';
+            });
+
+            document.getElementById('saveRepoBtn').addEventListener('click', () => {
+                const repoUrl = document.getElementById('repoUrl').value;
+                localStorage.setItem('repoUrl', repoUrl);
+                loadGames(repoUrl);
+                document.getElementById('repoPopup').style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>
